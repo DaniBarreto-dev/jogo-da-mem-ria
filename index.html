@@ -1,0 +1,140 @@
+<!--
+Projeto: Jogo da Memória - Tema: Universo Literário
+Autores: Equipe Daniel Barreto de Paula, Arthur Bento
+Data: 27/09/2025
+Instrutores: Edgard Lemos de Souza Junior; João Marcos Rocella Alves
+Senai Conde Jose Vicente - São Paulo - SP
+
+
+Este arquivo único (HTML + CSS + JS) implementa o jogo pedido no enunciado.
+Características implementadas:
+ - HTML para estrutura
+ - CSS responsivo para layout e design
+ - JavaScript para lógica do jogo
+ - Contagem de movimentos
+ - Seletor de dificuldade (fácil/medio/difícil -> número de pares)
+ - Temporizador
+ - Sistema de pontuação simples (baseado em tempo e movimentos)
+ - Modo multijogador local para 2 jogadores (jogam alternadamente)
+ - Acessibilidade: foco por teclado, roles, aria-live para atualizações
+ - Comentários e organização do código
+ - Instruções de entrega (GitHub) e checklist incluídos abaixo
+
+Instruções de uso:
+1. Salve este arquivo como "jogo_memoria.html" e abra em um navegador moderno.
+2. Escolha dificuldade, modo (1 jogador / 2 jogadores) e clique em "Iniciar jogo".
+3. Para jogar com teclado: navegue entre cartas usando Tab e pressione Enter/Space para virar.
+
+-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo da Memória – HP & PJ</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand container">
+        <span style="background:var(--accent); -webkit-background-clip:text; background-clip:text; color:transparent;">HP</span>
+        &
+        <span style="background:var(--accent); -webkit-background-clip:text; background-clip:text; color:transparent;">PJ</span>
+        <span>Jogo da Memória</span>
+        <span class="badge">HTML • CSS • JS</span>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- CONTROLS / SETUP -->
+      <section class="panel controls" aria-label="Painel de controle">
+        <div class="setup" id="setup">
+          <div class="field">
+            <div class="label">Modo</div>
+            <div class="seg" role="group" aria-label="Selecionar modo de jogo">
+              <button class="chip" data-seg="mode" data-value="solo" aria-pressed="true">Solo</button>
+              <button class="chip" data-seg="mode" data-value="duo">2 Jogadores</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">Dificuldade</div>
+            <div class="seg" role="group" aria-label="Selecionar dificuldade">
+              <button class="chip" data-seg="difficulty" data-value="easy" aria-pressed="true">Fácil (4×4)</button>
+              <button class="chip" data-seg="difficulty" data-value="medium">Médio (5×4)</button>
+              <button class="chip" data-seg="difficulty" data-value="hard">Difícil (6×4)</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">Tema</div>
+            <div class="seg" role="group" aria-label="Selecionar tema">
+              <button class="chip" data-seg="theme" data-value="mix" aria-pressed="true">HP + PJ</button>
+              <button class="chip" data-seg="theme" data-value="hp"><span class="dot hp"></span>&nbsp;Harry Potter</button>
+              <button class="chip" data-seg="theme" data-value="pj"><span class="dot pj"></span>&nbsp;Percy Jackson</button>
+            </div>
+          </div>
+        </div>
+        <button id="newGame" class="btn" aria-label="Iniciar novo jogo">Novo jogo</button>
+        <button id="reset" class="btn secondary" aria-label="Reiniciar rodada">Reiniciar</button>
+      </section>
+
+      <!-- SCORE BAR -->
+      <section class="panel" style="display:grid; grid-template-columns: repeat(4,1fr); gap:12px; align-items:center">
+        <div class="stat" aria-live="polite">⏱️ <span id="time">00:00</span></div>
+        <div class="stat">🎯 Movimentos: <span id="moves">0</span></div>
+        <div class="stat">⭐ Pontos: <span id="points">0</span></div>
+        <div class="stat" id="status" aria-live="polite">Boa sorte!</div>
+      </section>
+
+      <!-- BOARD + SIDEBAR -->
+      <section class="boardWrap" id="boardWrap">
+        <aside class="sidebar">
+          <div class="score">
+            <div class="box active" id="p1box">
+              <div class="stat"><span class="dot hp"></span> Jogador 1</div>
+              <div>Pontos: <b id="p1score">0</b></div>
+              <div>Pares: <b id="p1pairs">0</b></div>
+            </div>
+            <div class="box" id="p2box">
+              <div class="stat"><span class="dot pj"></span> Jogador 2</div>
+              <div>Pontos: <b id="p2score">0</b></div>
+              <div>Pares: <b id="p2pairs">0</b></div>
+            </div>
+          </div>
+          <div class="panel" style="display:grid; gap:8px">
+            <div class="label">Legenda de ícones</div>
+            <div class="cardList" id="legend"></div>
+          </div>
+        </aside>
+        <div class="board" id="board" style="--cols:4" aria-label="Tabuleiro do jogo"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">Acessível via teclado: TAB navega, ENTER/ESPACO vira carta. Em 2 jogadores: quem acerta continua a jogar.</div>
+    </footer>
+  </div>
+
+  <template id="cardTemplate">
+    <div class="card" data-state="hidden">
+      <button aria-label="Carta virada para baixo">
+        <div class="inner">
+          <div class="face front"><div class="crest" aria-hidden="true"></div></div>
+          <div class="face back">
+            <div class="symbol">
+              <div class="emoji">🙂</div>
+              <div class="label">Rótulo</div>
+              <div class="franchise">Franquia</div>
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

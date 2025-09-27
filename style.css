@@ -1,0 +1,94 @@
+/* Reset & Base */
+    :root{
+      --bg: #0b1020;
+      --bg-2: #10172a;
+      --card: #111827;  
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent-hp: #f59e0b; /* dourado Hogwarts */
+      --accent-pj: #38bdf8; /* azul oceano Camp Half-Blood */
+      --accent: linear-gradient(135deg,var(--accent-hp),var(--accent-pj));
+      --success: #22c55e;
+      --danger: #ef4444;
+      --glass: rgba(255,255,255,.06);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box }
+    html,body{ height:100%; }
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); background: radial-gradient(1200px 800px at 10% -10%, #1f2937 0%, transparent 70%), radial-gradient(800px 600px at 110% 10%, #172554 0%, transparent 60%), var(--bg);
+      letter-spacing:.2px;
+    }
+    a{ color:inherit }
+
+    /* Layout */
+    .app{ min-height:100%; display:grid; grid-template-rows:auto 1fr auto; }
+    header{
+      display:flex; align-items:center; gap:14px; padding:18px clamp(16px, 3vw, 32px);
+      backdrop-filter: saturate(130%) blur(8px); background:linear-gradient(to right, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .brand{ font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 2vw, 22px); display:flex; align-items:center; gap:10px }
+    .brand .badge{ padding:6px 10px; border-radius:999px; background:var(--glass); font-weight:700; font-size:12px; }
+
+    .container{ width:min(1100px, 92vw); margin-inline:auto; }
+
+    /* Control bar */
+    .controls{ display:grid; grid-template-columns: 1fr auto auto; gap:14px; align-items:center; margin: 18px auto; }
+    .panel{ background:var(--glass); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding:12px 14px; box-shadow: var(--shadow); }
+    .stat{ display:flex; align-items:center; gap:8px; font-weight:700 }
+    .dot{ width:10px; height:10px; border-radius:50%; background:var(--muted) }
+    .dot.hp{ background: var(--accent-hp) }
+    .dot.pj{ background: var(--accent-pj) }
+    .btn{ cursor:pointer; border:none; border-radius:14px; padding:10px 14px; font-weight:700; color:#0b1020; background:var(--accent); box-shadow: var(--shadow); transition: transform .08s ease, filter .2s; }
+    .btn:hover{ filter:saturate(110%) }
+    .btn:active{ transform: translateY(1px) }
+    .btn.secondary{ background: #1f2937; color: var(--text); border:1px solid rgba(255,255,255,.08) }
+
+    /* Setup form */
+    .setup{ display:grid; gap:16px; grid-template-columns: 1fr 1fr 1fr; }
+    .field{ display:grid; gap:10px }
+    .label{ font-size:12px; color:var(--muted); letter-spacing:.6px; text-transform:uppercase }
+    .seg{ display:flex; gap:8px; flex-wrap:wrap }
+    .chip{ border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02); color:var(--text); padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:600; }
+    .chip[data-selected="true"]{ outline:2px solid transparent; background: var(--glass); border-color: transparent; box-shadow: inset 0 0 0 2px rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.25) }
+
+    /* Board */
+    .boardWrap{ display:grid; gap:18px; grid-template-columns: 280px 1fr; align-items:start; }
+    .sidebar{ display:grid; gap:12px }
+    .cardList{ display:grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 12px; }
+
+    .board{ display:grid; gap:12px; grid-template-columns: repeat(var(--cols), 1fr); }
+
+    .card{ position:relative; aspect-ratio: 2/2.6; border-radius: 16px; perspective: 1000px; }
+    .card button{ cursor:pointer; padding:0; border:0; width:100%; height:100%; background:transparent; border-radius:inherit; }
+    .inner{ position:absolute; inset:0; border-radius:inherit; transform-style:preserve-3d; transition: transform .5s; }
+    .card[data-state="flipped"] .inner, .card[data-state="matched"] .inner{ transform: rotateY(180deg) }
+
+    .face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:inherit; display:grid; place-items:center; }
+    .front{ background:linear-gradient(180deg, #0b1020 0%, #0e162b 100%); border:1px solid rgba(255,255,255,.08); }
+    .front .crest{ width:70%; height:70%; border-radius:12px; background:var(--accent); mask: radial-gradient(circle at 70% 30%, rgba(0,0,0,.25) 10%, transparent 40%) }
+
+    .back{ transform: rotateY(180deg); background: radial-gradient(400px 400px at 50% 0%, rgba(255,255,255,.15), transparent 60%), linear-gradient(180deg, #0f172a, #0b1020); border:1px solid rgba(255,255,255,.1); box-shadow: inset 0 0 0 2px rgba(255,255,255,.05); padding:10px; }
+    .symbol{ display:grid; justify-items:center; gap:6px; text-align:center }
+    .emoji{ font-size: clamp(26px, 6vw, 40px); filter: drop-shadow(0 8px 18px rgba(0,0,0,.6)); }
+    .label{ font-weight:800 }
+    .franchise{ font-size:12px; color:var(--muted) }
+
+    .card[data-state="matched"] .back{ outline:2px solid rgba(255,255,255,.12) }
+
+    /* Score / players */
+    .score{ display:grid; grid-template-columns: 1fr 1fr; gap:10px }
+    .score .box{ background:var(--glass); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; display:grid; gap:6px; }
+    .score .box.active{ box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset }
+
+    /* Footer */
+    footer{ padding:18px; font-size:12px; color:var(--muted); display:flex; justify-content:center; }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .boardWrap{ grid-template-columns: 1fr; }
+      .controls{ grid-template-columns: 1fr; }
+    }
