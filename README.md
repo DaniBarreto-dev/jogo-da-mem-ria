@@ -1,4 +1,3 @@
-Claro! Aqui está uma versão formatada e organizada do seu texto de documentação para o projeto do **Jogo da Memória – Harry Potter & Percy Jackson**, para melhor leitura e apresentação:
 
 ---
 
